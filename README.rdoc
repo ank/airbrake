@@ -1,6 +1,19 @@
 = drop_folders
 
-Description goes here.
+This is a simple Sinatra app to convert movies using Handbrake presets.
+
+== Requirements
+
+The following gems should be installed first
+
+* thin
+* sinatra
+* resque
+
+== Usage
+
+  gem install drop_folders
+  drop_folders start
 
 == Note on Patches/Pull Requests
  

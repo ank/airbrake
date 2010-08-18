@@ -1,5 +1,22 @@
 require 'rubygems'
 require 'rake'
+require "redis"
+require "resque"
+require "resque/tasks"
+
+task "resque:setup" => :environment
+
+task :environment do
+  DIR = File.dirname(__FILE__)
+  Dir["#{DIR}/lib/*"].each {|lib| require lib }
+end
+
+namespace :resque do
+  desc 'Show resque info'
+  task :info do
+    p Resque.info
+  end
+end
 
 begin
   require 'jeweler'

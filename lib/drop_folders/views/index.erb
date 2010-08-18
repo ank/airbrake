@@ -1,0 +1,25 @@
+<p>There are <%= @info[:pending] %> pending and
+<%= @info[:processed]%> processed jobs across <%= @info[:queues] %> queues.</p>
+<table id="movieList">
+	<thead><tr><th>Path</th><th>Size</th><th colspan="2">Action</th></tr></thead>
+	<tbody>
+		<% @files.each do |file| %>
+		<tr>
+			<form action="/convert" method="post" accept-charset="utf-8">
+				<td><label for="path"><%= File.basename(file) %></label></td>
+				<td><%= file_size(file) %></td>
+				<td>
+					<select name="preset" id="preset" onchange="" size="1">
+						<option value="iPad">iPad</option>
+						<option value="iPhone">iPhone</option>
+					</select>
+				</td>
+				<td>
+						<input type="hidden" name="path" value="<%= file %>" id="path"/>
+						<input type="submit" value="Convert &rarr;"/>
+				</td>
+			</form>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
