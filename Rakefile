@@ -22,8 +22,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "drop_folders"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{web app to automate handbrake video conversion}
+    gem.description = %Q{A simple web app built with sinatra to automate handbrake video conversion}
     gem.email = "adamnkraut@gmail.com"
     gem.homepage = "http://github.com/ank/drop_folders"
     gem.authors = ["ank"]
