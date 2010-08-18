@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "bin/drop_folders",
      "config.yml",
+     "drop_folders.gemspec",
      "lib/convert_job.rb",
      "lib/drop_folders.rb",
      "lib/drop_folders/config.ru",
