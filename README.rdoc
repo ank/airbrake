@@ -1,4 +1,4 @@
-= drop_folders
+= airbrake
 
 This is a simple Sinatra app to convert movies using Handbrake presets.
 
@@ -10,10 +10,12 @@ The following gems should be installed first
 * sinatra
 * resque
 
+Install Handbrake[http://handbrake.fr/downloads.php] and Handbrake-CLI[http://handbrake.fr/downloads2.php].
+
 == Usage
 
-  gem install drop_folders
-  drop_folders start
+  gem install airbrake
+  airbrake start
 
 == Note on Patches/Pull Requests
  

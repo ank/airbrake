@@ -85,3 +85,11 @@ input[type=radio]:checked {
 select#preset {
 	width:auto;
 }
+
+#searchFolders {
+	padding: 20px 0px;
+}
+#searchFolders{
+	cellspacing:5;
+	cellpadding:5;
+}

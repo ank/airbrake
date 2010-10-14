@@ -17,7 +17,7 @@ class AirBrake < Sinatra::Base
     end
     
     def file_size_in_mb(file_name)
-      file_size(file_name) / (1024.0 * 1024.0)
+     (file_size(file_name) / (1024.0 * 1024.0)).to_i
     end
     
   end
@@ -48,25 +48,24 @@ class AirBrake < Sinatra::Base
   end
   
   get '/config' do
-    @search_folders = @redis.lrange("airbrake:config:search_folders",0,-1)
+    @search_folders = @redis.smembers("airbrake:config:search_folders")
     erb :config
   end
   
-  post '/destroy_it' do
-    @redis.ltrim("airbrake:config:search_folders",0,0)
-    @redis.del("airbrake:config:search_folders")
+  get '/destroy' do
+    @redis.srem("airbrake:config:search_folders",params[:id])
     redirect "/config"
   end
   
   post '/config' do
-    @redis.lpush("airbrake:config:search_folders", params[:search_folders])
+    @redis.sadd("airbrake:config:search_folders", params[:search_folders])
     redirect "/config"
   end
   
   def find_files
     files = []
     
-    search_folders = @redis.lrange("airbrake:config:search_folders",0,-1) || Array.new
+    search_folders = @redis.smembers("airbrake:config:search_folders") || Array.new
     
     search_folders.each do |path|
       if File.directory?(path)
@@ -75,8 +74,8 @@ class AirBrake < Sinatra::Base
         files << result
       end
     end
-    
-    files.flatten!
+
+    files.flatten
   end
  
 end

@@ -3,21 +3,24 @@
 	.invalid{color:red;}
 </style>
 
-<p>Configure</p>
+<p>Configuration</p>
 <form action="config" method="post" accept-charset="utf-8">
 	<label for="search_folders">Add a search folder: </label><input type="text" name="search_folders" value="" id="search_folders"/>
 	<input type="submit" value="Save"/>
 </form>
-<form method="post" action="destroy_it">
-  <input type="hidden" name="_method" value="delete" />
-  <div><button type="submit" onclick="alert('are you sure?')">Destroy it</button></div>
-</form>
+
 <% if !@search_folders.nil? %>
-<ul>
-	<% @search_folders.each do |f| %>
-		<% if File.directory?(f) %><li class="valid"><%= f %></li><% else %><li class="invalid"><%= f %></li><% end %>
+<table id="searchFolders">
+	<% @search_folders.each_with_index do |f,i| %>
+		<tr>
+			<% if File.directory?(f) %>
+			<td class="valid"><%= f %></td><% else %><td class="invalid"><%= f %></td>
+			<% end %>
+			<td><a href="/destroy?id=<%= f %>">Delete</a></td>
+		</tr>
+		
 	<% end %>	
-</ul>
+</table>
 <% else %>
 <p>No search folders.</p>
 <% end %>
