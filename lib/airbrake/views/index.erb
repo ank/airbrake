@@ -8,7 +8,7 @@
 		<tr>
 			<form action="/convert" method="post" accept-charset="utf-8">
 				<td><label for="path"><%= File.basename(file) %></label></td>
-				<td><%= file_size(file) %></td>
+				<td><%= file_size_in_mb(file) %>MB</td>
 				<td>
 					<select name="preset" id="preset" onchange="" size="1">
 						<option value="iPad">iPad</option>

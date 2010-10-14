@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# Thin daemon command line interface script.
+# Run <tt>airbrake -h</tt> to get more usage.
+
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
+
+require 'thin'
+require 'airbrake'
+require 'airbrake/convert'
+
+rackup_file = "#{File.dirname(__FILE__)}/../lib/airbrake/config.ru"
+ 
+argv = ARGV
+argv << ["-R", rackup_file] unless ARGV.include?("-R")
+argv << ["-p", "8010"] unless ARGV.include?("-p")
+argv << ["-e", "development"] unless ARGV.include?("-e")
+p argv.flatten
+Thin::Runner.new(argv.flatten).run!

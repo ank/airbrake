@@ -8,7 +8,7 @@ task "resque:setup" => :environment
 
 task :environment do
   DIR = File.dirname(__FILE__)
-  Dir["#{DIR}/lib/*"].each {|lib| require lib }
+  Dir["#{DIR}/lib/**/*.rb"].each {|lib| require lib }
 end
 
 namespace :resque do
@@ -21,11 +21,11 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "drop_folders"
+    gem.name = "airbrake"
     gem.summary = %Q{web app to automate handbrake video conversion}
     gem.description = %Q{A simple web app built with sinatra to automate handbrake video conversion}
     gem.email = "adamnkraut@gmail.com"
-    gem.homepage = "http://github.com/ank/drop_folders"
+    gem.homepage = "http://github.com/ank/airbrake"
     gem.authors = ["ank"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
@@ -64,7 +64,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "drop_folders #{version}"
+  rdoc.title = "airbrake #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
