@@ -6,4 +6,5 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'airbrake'
 
 class Test::Unit::TestCase
+
 end

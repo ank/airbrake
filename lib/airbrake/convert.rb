@@ -1,11 +1,12 @@
 require "fileutils"
 require "pathname"
+require "airbrake/models/video"
 
 class Convert
   @queue = :airbrake
 
-  def self.perform(params)
-    case params['preset']
+  def self.perform(video_id, preset="iPad")
+    case preset
     when "iPhone"
       preset = "iPhone & iPod Touch"
     when "iPad"
@@ -14,10 +15,11 @@ class Convert
       preset = "Classic"
     end
     
-    output = output_path(params['preset'], params['path'])
+    video = Video[video_id]
+    output = output_path(preset, video.path)
     
     # Run handbrake
-    cmd = "/usr/bin/HandBrakeCLI -i '#{params['path']}' -o '#{output}' --preset=#{preset}"
+    cmd = "/usr/bin/HandBrakeCLI -i '#{video.path}' -o '#{output}' --preset=#{preset}"
     puts "Command is: #{cmd}"
     system cmd
   end

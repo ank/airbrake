@@ -8,6 +8,7 @@ task "resque:setup" => :environment
 
 task :environment do
   DIR = File.dirname(__FILE__)
+  $LOAD_PATH.unshift("#{DIR}/lib")
   Dir["#{DIR}/lib/**/*.rb"].each {|lib| require lib }
 end
 

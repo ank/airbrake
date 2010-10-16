@@ -4,13 +4,64 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
 		<title>AirBrake</title>
+		<script src="/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/js/jquery.uitablefilter.js" type="text/javascript" charset="utf-8"></script>
 		<link rel="stylesheet" href="/css/main.css" type="text/css" media="screen" title="main" charset="utf-8"/>
+		
+		<script type="text/javascript" charset="utf-8">
+		
+			$(document).ready(function() {
+				video_table = $('#video_index');
+				
+				video_table.find('tr:odd').addClass('hl');
+				video_table.find('tr:even').addClass('hl_light');
+				
+				video_table.find("tbody > tr").find("td:eq(1)").mousedown(function(){
+				    $(this).prev().find(":checkbox").click()
+				  });
+
+				$("#filter").keyup(function() {
+				    $.uiTableFilter( video_table, this.value );
+				  })
+
+				$('#filter-form').submit(function(){
+				    video_table.find("tbody > tr:visible > td:eq(1)").mousedown();
+				    return false;
+				  }).focus(); //Give focus to input field
+				
+				$('#video_check_all').change(function() {
+					if ($(this).attr('checked')) {
+						video_table.find("td:visible :checkbox").click();
+					};
+					video_table.find("td:visible :checkbox").click();	
+				});
+				
+			});
+			
+		</script>
 	</head>
-	<h3>AirBrake v 0.1</h3>
-	<a href="/">Main</a> | 
-	<a href="http://famas:5678/working">Working</a> | 
-	<a href="config">Config</a>
+	<div id="main_title">
+		<h3>AirBrake v 0.2</h3>
+	</div>
+	<div id="nav_container">
+		<ul id='nav'>
+			<li>
+				<a href="/">Main</a>
+			</li>
+			
+			<li>
+				<a href="/queues/airbrake">Queue</a>
+			</li>
+			
+			<li>
+				<a href="/config">Config</a>
+			</li>
+		</ul>
+	</div>
+	<div class="clear"></div>
 	<body id="index" onload="">
-		<%= yield %>
+		<div id="main">
+			<%= yield %>
+		</div>
 	</body>
 </html>

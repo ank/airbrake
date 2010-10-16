@@ -2,7 +2,7 @@ body {
 	background: #e5e5e5;
 	padding: 1em;
 	margin: 0;
-	font-size: 16px;
+	font-size: 14px;
 }
 body * {
 	margin: 0;
@@ -82,14 +82,64 @@ input[type=radio]:checked {
 	-webkit-background-size: 28px 28px;
 }
 
+# Added for aibrake
+
+div.clear{
+	clear:both;
+}
 select#preset {
 	width:auto;
 }
 
-#searchFolders {
-	padding: 20px 0px;
+table.striped{
+	padding: 20px 0px 40px 10px;
 }
-#searchFolders{
-	cellspacing:5;
-	cellpadding:5;
+
+table.striped td, th{
+	padding: 0.75em;
 }
+.hl{
+	background-color: #9ECBFF;
+}
+.striped tr.hl{
+	background-color: #E2E2E2;
+}
+
+.striped tr.hl_light{
+	background-color:#FEFFFE;
+}
+
+.striped th{
+	text-align:left;
+	border-bottom: 1px solid #999;
+}
+
+th#video_check_all{
+	text-align:center;
+}
+#nav_container ul{
+	list-style: none;
+}
+
+#nav_container ul li{
+	background-color: #FEFFFE;
+	border: 1px solid #999;
+	float:left;
+	width: auto;
+	border-radius: .5em;
+	padding: 0.5em;
+	margin: 0.25em;
+	line-height: 1.5em;
+}
+
+#nav_container ul li a{}
+
+#main_title h3{
+	padding: 0.5em;
+	font-size: 18px;
+	line-height: 1.2em;
+	width: 80%;
+}
+#main table.jobs td{ width:50%;}
+div.clear{clear:both;}
+

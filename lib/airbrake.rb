@@ -1,6 +1,8 @@
 require "rubygems"
 require "sinatra/base"
 require "resque"
+require "airbrake"
+require "airbrake/models/video"
 
 class AirBrake < Sinatra::Base
 
@@ -11,7 +13,26 @@ class AirBrake < Sinatra::Base
   set :static, true
   
   helpers do
-    
+    include Rack::Utils
+    alias_method :h, :escape_html
+
+    def current_section
+      url request.path_info.sub('/','').split('/')[0].downcase
+    end
+
+    def current_page
+      url request.path_info.sub('/','')
+    end
+
+    def url(*path_parts)
+      [ path_prefix, path_parts ].join("/").squeeze('/')
+    end
+    alias_method :u, :url
+
+    def path_prefix
+      request.env['SCRIPT_NAME']
+    end
+
     def file_size(file_name)
       File.size(file_name)
     end
@@ -20,6 +41,13 @@ class AirBrake < Sinatra::Base
      (file_size(file_name) / (1024.0 * 1024.0)).to_i
     end
     
+    def show(page, layout = true)
+      begin
+        erb page.to_sym, {:layout => layout}, :resque => Resque
+      rescue Errno::ECONNREFUSED
+       erb :error, {:layout => false}, :error => "Can't connect to Redis! (#{Resque.redis_id})"
+      end
+     end
   end
   
   before do
@@ -27,55 +55,88 @@ class AirBrake < Sinatra::Base
   end
 
   get "/" do
-    @info = Resque.info
-    @files = find_files
+    @videos = Video.all
     erb :index
   end
 
   # Queue a conversion job
   post '/convert' do
-    Resque.enqueue(Convert, params)
+    puts '[Params]'
+    p params
+    videos = params["videos"]
+    videos.each do |v|
+      video = Video[v]
+      p video
+      video.async_convert(params["preset"])
+    end
+    # Resque.enqueue(Convert, params)
     redirect "/"
   end
+  get "/videos" do
+    @videos = Video.all
+    erb :index
+  end
   
-  get "/stats" do
-    @redis.info.to_s
+  # get "/stats" do
+  #   @keys = Video.db.keys
+  #   @redis.info.to_s
+  #   erb :stats
+  # end
+  
+  get "/stats/:id" do
+    show :stats
+  end
+
+  get "/stats/keys/:key" do
+    show :stats
   end
   
   # List resque jobs
   get '/jobs' do
-    
+    @jobs = Video.db.lrange("resque:queue:airbrake", 0, -1)
   end
   
   get '/config' do
-    @search_folders = @redis.smembers("airbrake:config:search_folders")
+    @search_folders = Video.db.smembers("airbrake:config:search_folders")
     erb :config
   end
   
-  get '/destroy' do
-    @redis.srem("airbrake:config:search_folders",params[:id])
-    redirect "/config"
+  get '/queues/:id' do
+    erb :queues
   end
   
   post '/config' do
-    @redis.sadd("airbrake:config:search_folders", params[:search_folders])
+    Video.db.sadd("airbrake:config:search_folders", params[:search_folders])
+    Video.reload!
+    
     redirect "/config"
   end
   
-  def find_files
-    files = []
-    
-    search_folders = @redis.smembers("airbrake:config:search_folders") || Array.new
-    
-    search_folders.each do |path|
-      if File.directory?(path)
-        # Find any .avi files at this location
-        result = Dir.glob(File.join(path, "**", "*.avi"))
-        files << result
-      end
+  get '/destroy' do
+    Video.db.srem("airbrake:config:search_folders",params[:id])
+    redirect "/config"
+  end
+  
+  get "/stats.txt" do
+    info = Resque.info
+
+    stats = []
+    stats << "resque.pending=#{info[:pending]}"
+    stats << "resque.processed+=#{info[:processed]}"
+    stats << "resque.failed+=#{info[:failed]}"
+    stats << "resque.workers=#{info[:workers]}"
+    stats << "resque.working=#{info[:working]}"
+
+    Resque.queues.each do |queue|
+      stats << "queues.#{queue}=#{Resque.size(queue)}"
     end
 
-    files.flatten
+    content_type 'text/plain'
+    stats.join "\n"
   end
- 
+
+  def resque
+    Resque
+  end
+
 end

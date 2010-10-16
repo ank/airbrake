@@ -14,5 +14,5 @@ argv = ARGV
 argv << ["-R", rackup_file] unless ARGV.include?("-R")
 argv << ["-p", "8010"] unless ARGV.include?("-p")
 argv << ["-e", "development"] unless ARGV.include?("-e")
-p argv.flatten
+
 Thin::Runner.new(argv.flatten).run!

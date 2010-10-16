@@ -1,29 +1,34 @@
+<br />
+<form id="filter-form">Filter: <input name="filter" id="filter" value="" maxlength="30" size="30" type="text"></form>
+<br />
 
-<p>There are <%= @info[:pending] %> pending and
-<%= @info[:processed]%> processed jobs across <%= @info[:queues] %> queues.</p>
+<form action="/convert" method="post" accept-charset="utf-8">
+	<select name="preset" id="preset" onchange="" size="1">
+		<option value="iPad">iPad</option>
+		<option value="iPhone">iPhone</option>
+	</select>
+	
+	<input type="submit" name="video_convert_action" value="Convert" id="">
 
-<p>Listing <%= @files.size %> files</p>
-
-<table id="index">
-	<thead><tr><th>Path</th><th>Size</th><th colspan="2">Action</th></tr></thead>
-	<tbody>
-		<% @files.each do |file| %>
+<table id="video_index" class="striped">
+	<thead>
 		<tr>
-			<form action="/convert" method="post" accept-charset="utf-8">
-				<td><label for="path"><%= File.basename(file) %></label></td>
-				<td><%= file_size_in_mb(file) %>MB</td>
-				<td>
-					<select name="preset" id="preset" onchange="" size="1">
-						<option value="iPad">iPad</option>
-						<option value="iPhone">iPhone</option>
-					</select>
+		<th id='video_check_all'>
+			<input name="video_check_all" value="" id="" type="checkbox"/>
+		</th>
+		<th>Name</th>
+		<th>Size</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @videos.each do |video| %>
+		<tr>
+				<td><input name="videos[]" value="<%= video.id %>" id="" type="checkbox" />
 				</td>
-				<td>
-						<input type="hidden" name="path" value="<%= file %>" id="path"/>
-						<input type="submit" value="Convert &rarr;"/>
-				</td>
-			</form>
+				<td><%= video.name %></td>
+				<td><%= video.size_mb %>MB</td>
 		</tr>
 		<% end %>
 	</tbody>
 </table>
+</form>
