@@ -92,8 +92,8 @@ class AirBrake < Sinatra::Base
   end
   
   # List resque jobs
-  get '/jobs' do
-    @jobs = Video.db.lrange("resque:queue:airbrake", 0, -1)
+  get '/working' do
+    erb :working
   end
   
   get '/config' do
@@ -106,7 +106,10 @@ class AirBrake < Sinatra::Base
   end
   
   post '/config' do
-    Video.db.sadd("airbrake:config:search_folders", params[:search_folders])
+    # get rid of empty parameters
+    dirs = params[:search_folders].reject{|p| p.empty? }
+    p "Adding Dirs: #{dirs}"
+    Video.db.sadd("airbrake:config:search_folders", dirs)
     Video.reload!
     
     redirect "/config"
